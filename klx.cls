@@ -12,7 +12,7 @@
 \RequirePackage{amsmath, amssymb, yhmath}
 \RequirePackage{graphicx}
 \RequirePackage[version=4]{mhchem}
-\RequirePackage{pifont,arcs,picinpar}
+\RequirePackage{pifont}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \linespread{1.3}
 \setlength{\fboxsep}{0pt}
@@ -92,7 +92,7 @@
 \newenvironment{questions}{% env for each item
 \stepcounter{nq}
 }{}
-\newenvironment{subquestions}{\begin{enumerate*}}{\end{enumerate*}}
-\newenvironment{subsubquestions}{\begin{enumerate*}}{\end{enumerate*}}
+\newenvironment{subquestions}{\vspace{-1em}\begin{enumerate*}}{\end{enumerate*}}
+\newenvironment{subsubquestions}{\vspace*{-0.4em}\begin{enumerate*}}{\end{enumerate*}}
 \renewcommand{\cong}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{../imgs/U+224C.pdf}}}}
 \renewcommand{\parallel}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{../imgs/U+2225.pdf}}}}
