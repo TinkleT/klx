@@ -11,6 +11,7 @@
 \RequirePackage{varwidth,calc}
 \RequirePackage{amsmath, amssymb, yhmath}
 \RequirePackage{graphicx}
+\RequirePackage[version=4]{mhchem}
 \RequirePackage{pifont,arcs,picinpar}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \linespread{1.3}
@@ -88,11 +89,9 @@
 \setlength{\subcontentlength}{\textwidth}
 \addtolength{\contentlength}{-1em}
 \addtolength{\subcontentlength}{-3em}
-\newenvironment{question}{%
-    \begin{minipage}[t]{\indexlength}\wq\end{minipage}\begin{minipage}[t]{\contentlength}
-    }{%
-    \end{minipage}\par
-    }
+\newenvironment{questions}{% env for each item
+\stepcounter{nq}
+}{}
 \newenvironment{subquestions}{\begin{enumerate*}}{\end{enumerate*}}
 \newenvironment{subsubquestions}{\begin{enumerate*}}{\end{enumerate*}}
 \renewcommand{\cong}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{../imgs/U+224C.pdf}}}}
