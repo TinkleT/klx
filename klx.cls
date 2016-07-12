@@ -19,7 +19,6 @@
 \linespread{1.2}
 \setlength{\fboxsep}{0pt}
 \setlength{\fboxrule}{0pt}
-\newlength{\optlength}
 \newlength{\imglength}
 \newlength{\imgwidth}
 \newlength{\imgheight}
@@ -39,8 +38,6 @@
 \newsavebox{\combox}
 \setlength{\comlength}{0pt}
 \setlength{\heightdiff}{0pt}
-\setlength{\optwidth}{\textwidth}
-\setlength{\optlength}{\textwidth}
 \newcommand{\dq}{\mbox{(\qquad)}}
 \newcommand{\dd}{\mbox{\rule[-.2ex]{4em}{.5pt}}}
 \newcommand{\fourch}[4]
@@ -169,9 +166,12 @@
 \catcode`\^^M=10% ignore space lines 
 \newcommand{\klxitem}[4]{
 \begin{varwidth}{#4}
+\setlength{\optwidth}{\textwidth}
 \settoheight{\imgheight}{ #3 }
 \settowidth{\imgwidth}{ #3 }
-\addtolength{\optwidth}{-1\imgwidth}
+\ifthenelse{\lengthtest{\imgheight = 0pt}}{\setlength{\imgwidth}{0pt}}{\addtolength{\optwidth}{-1\imgwidth}}
+\showthe\optwidth
+\showthe\textwidth
 \savebox{\descbox}{\parbox[t]{\optwidth}{ #1 }}
 \savebox{\optbox}{\parbox[t]{\optwidth}{ #1   #2 }}
 \settoheight{\descheight}{\usebox{\descbox}}
@@ -189,12 +189,14 @@
 \showthe\textwidth
 \showthe\descheight
 \showthe\descdepth
+\showthe\imgheight
 \ifthenelse{\lengthtest{\heightdiff > 0pt}}{\setlength{\comlength}{\heightdiff}}{}
 \savebox{\combox}{\parbox[t]{\optwidth}{ #1   #2  \vspace*{\comlength} }}
-\begin{window}[0,r,{#3},{}]
+
+\ifthenelse{\lengthtest{\imgheight = 0pt}}{\parbox[t]{\optwidth}{#1} #2}{\begin{window}[0,r,{#3},{}]
 \ifthenelse{\lengthtest{\desctatolheight > \imgheight}}{
-\setlength{\optwidth}{\textwidth}#1 #2 }{
+\setlength{\optwidth}{\textwidth}#1 #2 \end{window}}{
 % else
-\ifthenelse{\lengthtest{\opttatolheight > \imgheight}}{\usebox{\optbox}}{\usebox{\combox}}}
-\end{window}
+\ifthenelse{\lengthtest{\opttatolheight > \imgheight}}{\usebox{\optbox}}{\usebox{\combox}}}\end{window}}
+
 \end{varwidth}}
