@@ -7,15 +7,17 @@
 \LoadClass[10pt]{standalone}
 %\RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
 \pagestyle{empty}
-\RequirePackage{xeCJK}
+\RequirePackage[CJKmath=true]{xeCJK}
 \RequirePackage{varwidth,calc}
 \RequirePackage{amsmath, amssymb, yhmath}
-\RequirePackage{graphicx}
+\RequirePackage{graphicx,ulem}
+\RequirePackage{mathrsfs}
 \RequirePackage[version=4]{mhchem}
 \RequirePackage{pifont, picinpar}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \RequirePackage{newunicodechar}
-\setCJKmainfont{STSong}
+%\setCJKmainfont{Simsun}
+\catcode`\^^M=10 % ignore space lines 
 \linespread{1.2}
 \setlength{\fboxsep}{0pt}
 \setlength{\fboxrule}{0pt}
@@ -40,12 +42,12 @@
 \setlength{\heightdiff}{0pt}
 \newcommand{\dq}{\mbox{(\qquad)}}
 \newcommand{\dd}{\mbox{\rule[-.2ex]{4em}{.5pt}}}
-\newcommand{\fourch}[4]
-{~\newline \begin{tabular}{*{4} {@{} p{0.23\optwidth}}} A. #1 & B. #2 & C. #3 & D. #4 \end{tabular}}
-\newcommand{\twoch}[4]
-{~\newline \begin{tabular}{*{2} {@{} p{0.46\optwidth}}} A. #1 & B. #2\\ \end{tabular}
+\newcommand{\fourch}[4]% 四个选项一行
+{\begin{tabular}{*{4} {@{} p{0.23\optwidth}}} A. #1 & B. #2 & C. #3 & D. #4 \end{tabular}}
+\newcommand{\twoch}[4]% 两个选项一行
+{\begin{tabular}{*{2} {@{} p{0.46\optwidth}}} A. #1 & B. #2 \end{tabular}
 \begin{tabular}{*{2} {@{} p{0.46\optwidth}}}C. #3 & D. #4 \end{tabular}}
-\newcommand{\onech}[4]{ ~\newline  A. #1 \\ B. #2 \\ C. #3 \\ D. #4}
+\newcommand{\onech}[4]{  A. #1 \\ B. #2 \\ C. #3 \\ D. #4}
 %\newcommand{\imgch}[4]{
 % \begin{tabular}{cccc}  \fbox{#1} &  \fbox{#2} & \fbox{#3} &  \fbox{#4} \\ A & B & C & D \end{tabular}}
 \newlength{\cha}
@@ -63,16 +65,16 @@
     \addtolength{\cha}{\chd}
     \addtolength{\cha}{\chc}
     \ifthenelse{\lengthtest{\cha = 0mm}}
-    {%then no text in img_opts
-     
-    \hspace*{-1em}\begin{tabular}{cccc}  
+    {%then no text in img_opts 
+
+    \hspace*{-5pt}\begin{tabular}{cccc}  
     \fbox{#2} &  \fbox{#4} & \fbox{#6} &  \fbox{#8} \\
     A & B & C & D 
     \end{tabular}
     }
     {%else some text in img_opts
-     
-    \hspace*{-1em}\begin{tabular}{*{4} {@{} p{0.23\optwidth}}c}
+
+    \hspace*{-0.5em}\begin{tabular}{*{4} {@{} p{0.23\optwidth}}c}
     \centering #2 & \centering #4 & \centering #6 & \centering #8 &\\
     \parbox{0.23\optwidth}{ \centering #1} & \parbox{0.23\optwidth}{\centering #3} & \parbox{0.23\optwidth}{\centering #5} &  \parbox{0.23\optwidth}{\centering #7} & \\
     \centering A & \centering B & \centering C & \centering D   &\\
@@ -93,7 +95,7 @@
     {\onech{#1}{#3}{#5}{#7}}
     {\ifthenelse{\lengthtest{\maxw >0.23\optwidth}}{\twoch{#1}{#3}{#5}{#7}}{\fourch{#1}{#3}{#5}{#7}}}
     }
-\newcommand{\trech}[6]{
+\newcommand{\trech}[6]{% 三个选项的选择题
     \settowidth{\cha}{A. #1}
     \settowidth{\chb}{B. #3}
     \settowidth{\chc}{C. #5}
@@ -105,7 +107,7 @@
          \begin{tabular}{*{3} {@{} p{0.33\optwidth}}}A. #1 & B. #3 & C. #5 \end{tabular}
         }
 }
-\newcommand{\fivch}[9]{
+\newcommand{\fivch}[9]{% 五个选项的选择题
     \settowidth{\cha}{A. #1}
     \settowidth{\chb}{B. #3}
     \settowidth{\chc}{C. #5}
@@ -163,40 +165,50 @@
 %\standaloneconfig{border={0pt 0pt 0pt 0pt}}% used for multi-items test
 \standaloneenv{questions}% used for multi-items test
 %}
-\catcode`\^^M=10% ignore space lines 
 \newcommand{\klxitem}[4]{
-\begin{varwidth}{#4}
-\setlength{\optwidth}{\textwidth}
-\settoheight{\imgheight}{ #3 }
-\settowidth{\imgwidth}{ #3 }
-\ifthenelse{\lengthtest{\imgheight = 0pt}}{\setlength{\imgwidth}{0pt}}{\addtolength{\optwidth}{-1\imgwidth}}
-\showthe\optwidth
-\showthe\textwidth
-\savebox{\descbox}{\parbox[t]{\optwidth}{ #1 }}
-\savebox{\optbox}{\parbox[t]{\optwidth}{ #1   #2 }}
-\settoheight{\descheight}{\usebox{\descbox}}
-\settodepth{\descdepth}{\usebox{\descbox}}
-\setlength{\desctatolheight}{\descheight}
-\addtolength{\desctatolheight}{\descdepth}
-\settoheight{\optheight}{\usebox{\optbox}}
-\settodepth{\optdepth}{\usebox{\optbox}}
-\setlength{\opttatolheight}{\optheight}
-\addtolength{\opttatolheight}{\optdepth}
-\addtolength{\heightdiff}{\imgheight}
-\addtolength{\heightdiff}{-1\opttatolheight}
-\showthe\optwidth
-\showthe\imgwidth
-\showthe\textwidth
-\showthe\descheight
-\showthe\descdepth
-\showthe\imgheight
-\ifthenelse{\lengthtest{\heightdiff > 0pt}}{\setlength{\comlength}{\heightdiff}}{}
-\savebox{\combox}{\parbox[t]{\optwidth}{ #1   #2  \vspace*{\comlength} }}
+    \begin{varwidth}{#4}
+    \setlength{\optwidth}{\textwidth}
+    \settoheight{\imgheight}{#3}
+    \settowidth{\imgwidth}{#3}
+    \ifthenelse{\lengthtest{\imgheight = 0pt}}{\setlength{\imgwidth}{0pt}}{\addtolength{\optwidth}{-1\imgwidth}}
+    \showthe\optwidth
+    \showthe\textwidth
+    \savebox{\descbox}{\parbox[t]{\optwidth}{#1}}
+    \savebox{\optbox}{\parbox[t]{\optwidth}{#1 \ \\ #2}}
+    \settoheight{\descheight}{\usebox{\descbox}}
+    \settodepth{\descdepth}{\usebox{\descbox}}
+    \setlength{\desctatolheight}{\descheight}
+    \addtolength{\desctatolheight}{\descdepth}
+    \addtolength{\desctatolheight}{3.33pt}
+    \settoheight{\optheight}{\usebox{\optbox}}
+    \settodepth{\optdepth}{\usebox{\optbox}}
+    \setlength{\opttatolheight}{\optheight}
+    \addtolength{\opttatolheight}{\optdepth}
+    \addtolength{\heightdiff}{\imgheight}
+    \addtolength{\heightdiff}{-1\opttatolheight}
+    \ifthenelse{\lengthtest{\heightdiff > 0pt}}{\setlength{\comlength}{\heightdiff}}{}
+    \savebox{\combox}{\parbox[t]{\optwidth}{#1 \newline #2 \vspace*{\comlength} }}
 
-\ifthenelse{\lengthtest{\imgheight = 0pt}}{\parbox[t]{\optwidth}{#1} #2}{\begin{window}[0,r,{#3},{}]
-\ifthenelse{\lengthtest{\desctatolheight > \imgheight}}{
-\setlength{\optwidth}{\textwidth}#1 #2 \end{window}}{
-% else
-\ifthenelse{\lengthtest{\opttatolheight > \imgheight}}{\usebox{\optbox}}{\usebox{\combox}}}\end{window}}
-
-\end{varwidth}}
+    \ifthenelse{\lengthtest{\imgheight = 0pt}}
+        { % then
+        \parbox[t]{\optwidth}{#1} #2
+        }
+        { % else
+        \begin{window}[0,r,{#3},{}]
+        \ifthenelse{\lengthtest{\desctatolheight > \imgheight}}
+            { % then
+            #1 \end{window} \setlength{\optwidth}{\textwidth}
+             #2 }
+            { % else
+            \ifthenelse{\lengthtest{\opttatolheight > \imgheight}}
+                {\usebox{\optbox}}
+                {\usebox{\combox}}\end{window}}}
+    \showthe\optwidth
+    \showthe\imgwidth
+    \showthe\textwidth
+    \showthe\descheight
+    \showthe\descdepth
+    \showthe\imgheight
+    \showthe\opttatolheight
+    \showthe\comlength
+    \end{varwidth}}
