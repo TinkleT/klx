@@ -1,11 +1,10 @@
-%% This is file 'klx.cls',
-%% Used for klx latex render.
+%% This is file 'klxp.cls',
+%% Used for klx latex render. Typically for math paper render
 
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{klx}[2016/06/28 v0.1 test]
-%\LoadClass{article}
-\LoadClass[10pt]{standalone}
-%\RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
+\ProvidesClass{klxp}[2016/06/28 v0.1 test]
+\LoadClass{article}
+\RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
 \pagestyle{empty}
 \RequirePackage[CJKmath=true]{xeCJK}
 \RequirePackage{varwidth,calc}
@@ -16,11 +15,7 @@
 \RequirePackage{pifont, picinpar}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \RequirePackage{newunicodechar}
-
 %\setCJKmainfont{Simsun}
-%\DeclareOption{multiitem}{
-%    \standaloneenv{questions}% used for multi-items test
-%    }
 \catcode`\^^M=10 % treat return as space
 \linespread{1.2}
 \setlength{\fboxsep}{0pt}
@@ -39,6 +34,7 @@
 \newlength{\desctatolheight}
 \newlength{\heightdiff}
 \newlength{\comlength}
+\newlength{\itemtotalheight}
 \newsavebox{\descbox}
 \newsavebox{\optbox}
 \newsavebox{\combox}
@@ -86,7 +82,7 @@
     }
     }
 \setlength{\parindent}{0em}
-\setlength{\parskip}{1em}
+\setlength{\parskip}{.1em}
 \newcommand{\ch}[8]{
     \settowidth{\cha}{A. #1}
     \settowidth{\chb}{B. #3}
@@ -150,7 +146,7 @@
 \addtolength{\subcontentlength}{-3em}
 \newenvironment{questions}{% env for each item
 \stepcounter{nq}
-}{}
+}{\par}
 %\newenvironment{subquestions}{%
 %\begin{minipage}[t]{\indexlength}\wqq\end{minipage}\begin{minipage}[t]{\subcontentlength}
 %}{%
@@ -158,18 +154,16 @@
 %} 
 \newenvironment{subquestions}{\begin{enumerate*}}{\end{enumerate*}}
 \newenvironment{subsubquestions}{
-%\vspace*{-0.4em}
 \begin{enumerate*}}{\end{enumerate*}}
 \renewcommand{\cong}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{../imgs/U+224C.pdf}}}}
 \renewcommand{\parallel}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{../imgs/U+2225.pdf}}}}
 \newcommand{\phrm}[1]{{\rm{#1}}}
 \newunicodechar{Ⅳ}{\text{$\mathrm{IV}$}}
-
-%\AtEndOfClass{
-%\standaloneconfig{border={0pt 0pt 0pt 0pt}}% used for multi-items test
-
-%}
 \newcommand{\klxitem}[4]{
+    \begin{minipage}[t]{\indexlength}
+    \thenq. 
+    \end{minipage}\begin{minipage}[t]{\contentlength}
+    \vspace{0pt}
     \begin{varwidth}{#4}
     \setlength{\optwidth}{\textwidth}
     \settoheight{\imgheight}{#3}
@@ -191,13 +185,17 @@
     \addtolength{\heightdiff}{\imgheight}
     \addtolength{\heightdiff}{-1\opttatolheight}
     \ifthenelse{\lengthtest{\heightdiff > 0pt}}{\setlength{\comlength}{\heightdiff}}{}
-    \savebox{\combox}{\parbox[t]{\optwidth}{#1 \newline #2 \vspace*{\comlength} }}
-
+    \savebox{\combox}{\parbox[t]{\optwidth}{#1 \newline #2 
+    \vspace*{\comlength} 
+        }
+    }
+    \vspace*{-\descheight}
     \ifthenelse{\lengthtest{\imgheight = 0pt}}
         { % then
         \parbox[t]{\optwidth}{#1} #2
         }
         { % else
+        \vspace*{-.4em}
         \begin{window}[0,r,{#3},{}]
         \ifthenelse{\lengthtest{\desctatolheight > \imgheight}}
             { % then
@@ -215,4 +213,7 @@
     \showthe\imgheight
     \showthe\opttatolheight
     \showthe\comlength
-    \end{varwidth}}
+    \end{varwidth}
+    \end{minipage}
+
+}
