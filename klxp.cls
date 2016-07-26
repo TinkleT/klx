@@ -5,17 +5,19 @@
 \ProvidesClass{klxp}[2016/06/28 v0.1 test]
 \LoadClass{article}
 \RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
-\pagestyle{empty}
+
 \RequirePackage[CJKmath=true]{xeCJK}
 \RequirePackage{varwidth,calc}
 \RequirePackage{amsmath, amssymb, yhmath}
 \RequirePackage{graphicx,ulem}
 \RequirePackage{mathrsfs}
 \RequirePackage[version=4]{mhchem}
-\RequirePackage{pifont, picinpar}
+\RequirePackage{pifont, picinpar, picins, fancyhdr,lastpage}
+\pagestyle{fancy}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \RequirePackage{newunicodechar}
-%\setCJKmainfont{Simsun}
+\graphicspath{{/Users/zhangyingjie/var/data/img/}}
+\setCJKmainfont{STSong}
 \catcode`\^^M=10 % treat return as space
 \linespread{1.2}
 \setlength{\fboxsep}{0pt}
@@ -30,24 +32,31 @@
 \newlength{\restheight}
 \newlength{\optdepth}
 \newlength{\descdepth}
-\newlength{\opttatolheight}
-\newlength{\desctatolheight}
+\newlength{\opttotalheight}
+\newlength{\desctotalheight}
 \newlength{\heightdiff}
 \newlength{\comlength}
 \newlength{\itemtotalheight}
+\newlength{\idxcorheight}
+\newlength{\idxsep}
+\newlength{\imgsep}
+\newlength{\twidth}
 \newsavebox{\descbox}
 \newsavebox{\optbox}
 \newsavebox{\combox}
 \setlength{\comlength}{0pt}
 \setlength{\heightdiff}{0pt}
+\setlength{\idxsep}{.3em} % sep between idx and content
+\setlength{\imgsep}{.4em} % sep between content and img
+\setlength{\optwidth}{\textwidth}
 \newcommand{\dq}{\mbox{(\qquad)}}
-\newcommand{\dd}{\mbox{\rule[-.2ex]{4em}{.5pt}}}
+\newcommand{\dd}{\mbox{\ \rule[-.25ex]{4em}{.5pt}}}
 \newcommand{\fourch}[4]% 四个选项一行
-{\begin{tabular}{*{4} {@{} p{0.23\optwidth}}} A. #1 & B. #2 & C. #3 & D. #4 \end{tabular}}
+{\par \begin{tabular}{*{4} {@{} p{0.23\optwidth}}} A. #1 & B. #2 & C. #3 & D. #4 \end{tabular}}
 \newcommand{\twoch}[4]% 两个选项一行
-{\begin{tabular}{*{2} {@{} p{0.46\optwidth}}} A. #1 & B. #2 \end{tabular}
+{\par \begin{tabular}{*{2} {@{} p{0.46\optwidth}}} A. #1 & B. #2 \end{tabular}
 \begin{tabular}{*{2} {@{} p{0.46\optwidth}}}C. #3 & D. #4 \end{tabular}}
-\newcommand{\onech}[4]{  A. #1 \\ B. #2 \\ C. #3 \\ D. #4}
+\newcommand{\onech}[4]{\par A. #1 \\ B. #2 \\ C. #3 \\ D. #4}
 %\newcommand{\imgch}[4]{
 % \begin{tabular}{cccc}  \fbox{#1} &  \fbox{#2} & \fbox{#3} &  \fbox{#4} \\ A & B & C & D \end{tabular}}
 \newlength{\cha}
@@ -57,6 +66,7 @@
 \newlength{\che}
 \newlength{\maxw}
 \newcommand{\imgch}[8]{
+    \par
     \settowidth{\cha}{#1}
     \settowidth{\chb}{#3}
     \settowidth{\chc}{#5}
@@ -80,9 +90,9 @@
     \centering A & \centering B & \centering C & \centering D   &\\
     \end{tabular}
     }
-    }
+}
 \setlength{\parindent}{0em}
-\setlength{\parskip}{.1em}
+\setlength{\parskip}{5pt}
 \newcommand{\ch}[8]{
     \settowidth{\cha}{A. #1}
     \settowidth{\chb}{B. #3}
@@ -94,8 +104,9 @@
     \ifthenelse{\lengthtest{\maxw > 0.46\optwidth}}
     {\onech{#1}{#3}{#5}{#7}}
     {\ifthenelse{\lengthtest{\maxw >0.23\optwidth}}{\twoch{#1}{#3}{#5}{#7}}{\fourch{#1}{#3}{#5}{#7}}}
-    }
+}
 \newcommand{\trech}[6]{% 三个选项的选择题
+    \par
     \settowidth{\cha}{A. #1}
     \settowidth{\chb}{B. #3}
     \settowidth{\chc}{C. #5}
@@ -108,6 +119,7 @@
         }
 }
 \newcommand{\fivch}[9]{% 五个选项的选择题
+    \par
     \settowidth{\cha}{A. #1}
     \settowidth{\chb}{B. #3}
     \settowidth{\chc}{C. #5}
@@ -129,21 +141,27 @@
 \newcounter{nqq}[nq]
 \newcounter{nqqq}[nqq]
 \newcommand{\wq}{ 
-    \stepcounter{nq}
+    %\stepcounter{nq}
     \thenq.\hspace{.6em}}
 %\newcommand{\wqq}{\stepcounter{nqq}\item[(\thenqq)]}
-\newcommand{\wqq}{\stepcounter{nqq}\item[(\thenqq)]}
+\newcommand{\wqq}{
+    \stepcounter{nqq}
+    \item[(\thenqq)]%
+}
 \newcommand{\wqqq}{\stepcounter{nqqq}\item[(\roman{nqqq})]}
-\newcommand{\wns}{\stepcounter{ns}\CJKnumber{\thens}、}
+\newcommand{\wns}[1]{\stepcounter{ns}{\bf \CJKnumber{\thens}、#1}}
 \newcommand{\ws}[2]{\begin{minipage}[t]{\textwidth} {\heiti \wns #1 } #2 \end{minipage} }
 \newlength{\indexlength}
-\newlength{\contentlength}
-\newlength{\subcontentlength}
+\newlength{\contl}
+\newlength{\sbcontl}
+\newlength{\ssbcontl}
 \setlength{\indexlength}{1.5em}
-\setlength{\contentlength}{\textwidth}
-\setlength{\subcontentlength}{\textwidth}
-\addtolength{\contentlength}{-1em}
-\addtolength{\subcontentlength}{-3em}
+\setlength{\contl}{\textwidth}
+\addtolength{\contl}{-1em}
+\setlength{\sbcontl}{\contl}
+\addtolength{\sbcontl}{-1em}
+\setlength{\ssbcontl}{\sbcontl}
+\addtolength{\ssbcontl}{-1em}
 \newenvironment{questions}{% env for each item
 \stepcounter{nq}
 }{\par}
@@ -155,16 +173,14 @@
 \newenvironment{subquestions}{\begin{enumerate*}}{\end{enumerate*}}
 \newenvironment{subsubquestions}{
 \begin{enumerate*}}{\end{enumerate*}}
-\renewcommand{\cong}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{../imgs/U+224C.pdf}}}}
-\renewcommand{\parallel}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{../imgs/U+2225.pdf}}}}
+\renewcommand{\cong}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+224C.pdf}}}}
+\renewcommand{\parallel}{\text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+2225.pdf}}}}
+\renewcommand{\backsim}{\text{\raisebox{-0.2em}{\includegraphics[height=1.2em]{U+223D.pdf}}}}
 \newcommand{\phrm}[1]{{\rm{#1}}}
 \newunicodechar{Ⅳ}{\text{$\mathrm{IV}$}}
 \newcommand{\klxitem}[4]{
-    \begin{minipage}[t]{\indexlength}
-    \thenq. 
-    \end{minipage}\begin{minipage}[t]{\contentlength}
-    \vspace{0pt}
-    \begin{varwidth}{#4}
+
+    %\begin{varwidth}{#4}
     \setlength{\optwidth}{\textwidth}
     \settoheight{\imgheight}{#3}
     \settowidth{\imgwidth}{#3}
@@ -172,37 +188,50 @@
     \showthe\optwidth
     \showthe\textwidth
     \savebox{\descbox}{\parbox[t]{\optwidth}{#1}}
-    \savebox{\optbox}{\parbox[t]{\optwidth}{#1 \ \\ #2}}
+    \savebox{\optbox}{\parbox[t]{\optwidth}{
+    #1 \ \\ #2
+    }}
     \settoheight{\descheight}{\usebox{\descbox}}
     \settodepth{\descdepth}{\usebox{\descbox}}
-    \setlength{\desctatolheight}{\descheight}
-    \addtolength{\desctatolheight}{\descdepth}
-    \addtolength{\desctatolheight}{3.33pt}
+    \setlength{\desctotalheight}{\descheight}
+    \addtolength{\desctotalheight}{\descdepth}
+    \addtolength{\desctotalheight}{3.33pt}
     \settoheight{\optheight}{\usebox{\optbox}}
     \settodepth{\optdepth}{\usebox{\optbox}}
-    \setlength{\opttatolheight}{\optheight}
-    \addtolength{\opttatolheight}{\optdepth}
+    \setlength{\opttotalheight}{\optheight}
+    \addtolength{\opttotalheight}{\optdepth}
     \addtolength{\heightdiff}{\imgheight}
-    \addtolength{\heightdiff}{-1\opttatolheight}
+    \addtolength{\heightdiff}{-1\opttotalheight}
     \ifthenelse{\lengthtest{\heightdiff > 0pt}}{\setlength{\comlength}{\heightdiff}}{}
-    \savebox{\combox}{\parbox[t]{\optwidth}{#1 \newline #2 
+    \savebox{\combox}{\parbox[t]{\optwidth}{#1 \ \\ #2 
     \vspace*{\comlength} 
         }
     }
-    \vspace*{-\descheight}
+    \ifthenelse{\lengthtest{\imgheight = 0pt}}{\def\idxcor{\relax}}{\setlength{\idxcorheight}{\descheight}%
+    \addtolength{\idxcorheight}{0pt}%
+    \def\idxcor{\vspace*{\idxcorheight}}}
+    \showthe\idxcorheight
+    \begin{minipage}[t]{\indexlength}
+%    \hrule height-\idxcorheight depth-\idxcorheight
+    %\idxcor
+    \hfill \thenq. 
+    \end{minipage}\hspace*{\idxsep}\begin{minipage}[t]{\contl}
+    %\vspace{0pt}
+   % \vspace*{-\descheight}
     \ifthenelse{\lengthtest{\imgheight = 0pt}}
         { % then
         \parbox[t]{\optwidth}{#1} #2
         }
         { % else
-        \vspace*{-.4em}
+        %\vspace*{-.4em}
         \begin{window}[0,r,{#3},{}]
-        \ifthenelse{\lengthtest{\desctatolheight > \imgheight}}
+        \ifthenelse{\lengthtest{\desctotalheight > \imgheight}}
             { % then
-            #1 \end{window} \setlength{\optwidth}{\textwidth}
+            #1 
+            \end{window} \setlength{\optwidth}{\textwidth}
              #2 }
             { % else
-            \ifthenelse{\lengthtest{\opttatolheight > \imgheight}}
+            \ifthenelse{\lengthtest{\opttotalheight > \imgheight}}
                 {\usebox{\optbox}}
                 {\usebox{\combox}}\end{window}}}
     \showthe\optwidth
@@ -211,9 +240,83 @@
     \showthe\descheight
     \showthe\descdepth
     \showthe\imgheight
-    \showthe\opttatolheight
+    \showthe\opttotalheight
     \showthe\comlength
-    \end{varwidth}
+    %\end{varwidth}
     \end{minipage}
 
 }
+\newcommand{\klxitemm}[2]{
+    \settowidth{\imgwidth}{#1}
+    \showthe\imgwidth
+    \ifthenelse{\lengthtest{\imgwidth=0pt}}{}{
+        \addtolength{\imgwidth}{\imgsep}
+    }
+    \addtolength{\contl}{-\imgwidth}
+    \setlength{\optwidth}{\contl}
+    \begin{minipage}[t]{\indexlength}
+    \hfill \thenq.
+%    \settowidth{\imgwidth}{#3}
+    \showthe\contl
+
+    \end{minipage}\hspace*{\idxsep}%
+    \begin{minipage}[t]{\contl}
+    #2
+    \end{minipage}\hspace*{\imgsep}%
+    \begin{minipage}[t]{\imgwidth}
+    \vspace{-1em}%
+    #1
+    \end{minipage}
+    \showthe\imgwidth
+    \showthe\contl
+}
+\def\qssep{\hrule height0pt\vspace*{5pt}}   
+\newcommand{\klxqs}[2]{\par%
+    \stepcounter{nqq}
+    \settowidth{\imgwidth}{#1}
+    \ifthenelse{\lengthtest{\imgwidth=0pt}}{}{
+        \addtolength{\imgwidth}{\imgsep}
+    }
+    \showthe\imgwidth
+    \setlength{\sbcontl}{\contl}
+    \addtolength{\sbcontl}{-\imgwidth}
+    \addtolength{\sbcontl}{-\imgsep}
+    \addtolength{\sbcontl}{-\indexlength}
+%    \hspace*{\indexlength}
+    \begin{minipage}[t]{\indexlength}
+    \hfill (\thenqq)
+    \end{minipage}\hspace*{\idxsep}%
+    \begin{minipage}[t]{\sbcontl}
+    #2
+    \end{minipage}\hspace*{\imgsep}%
+    \begin{minipage}[t]{\imgwidth}
+    \vspace{-1em}%
+    #1
+    \end{minipage}
+    \qssep
+}   
+\newcommand{\klxqss}[2]{\par%
+    \stepcounter{nqqq}
+    \settowidth{\imgwidth}{#1}
+    \ifthenelse{\lengthtest{\imgwidth=0pt}}{}{
+        \addtolength{\imgwidth}{\imgsep}
+    }
+    \setlength{\ssbcontl}{\sbcontl}
+    \addtolength{\ssbcontl}{-\imgwidth}
+    \addtolength{\ssbcontl}{-\indexlength}
+    \begin{minipage}[t]{\indexlength}
+    \hfill [\thenqqq]
+    \end{minipage}\hspace*{\idxsep}
+    \begin{minipage}[t]{\ssbcontl}
+    #2
+    \end{minipage}\hspace*{\imgsep}%
+
+}
+\newenvironment{displayimgs}{
+    \begin{center}
+        \vspace*{-0.5em}
+}{
+        \vspace*{-1em}
+    \end{center}
+}
+\cfoot{第 \thepage 页，共 \pageref{LastPage} 页}
