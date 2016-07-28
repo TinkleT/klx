@@ -155,7 +155,7 @@
 \newlength{\contl}
 \newlength{\sbcontl}
 \newlength{\ssbcontl}
-\setlength{\indexlength}{1.5em}
+\setlength{\indexlength}{2em}
 \setlength{\contl}{\textwidth}
 \addtolength{\contl}{-1em}
 \setlength{\sbcontl}{\contl}
@@ -314,9 +314,18 @@
 }
 \newenvironment{displayimgs}{
     \begin{center}
-        \vspace*{-0.5em}
+        \vspace*{-1em}
 }{
         \vspace*{-1em}
     \end{center}
 }
+\newcommand{\tabximg}[2]{
+    \begin{center}
+        \vspace*{-1em}
+
+        \vspace*{-1em}
+    \end{center}
+}
+\newcommand{\gt}{\ {>}\ }
+\newcommand{\lt}{\ {<}\ }
 \cfoot{第 \thepage 页，共 \pageref{LastPage} 页}
