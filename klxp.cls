@@ -5,7 +5,6 @@
 \ProvidesClass{klxp}[2016/06/28 v0.1 test]
 \LoadClass[twocolumn]{article}
 \RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
-
 \RequirePackage[CJKmath=true]{xeCJK}
 \RequirePackage{varwidth,calc}
 \RequirePackage{amsmath, amssymb, yhmath}
@@ -16,9 +15,69 @@
 \pagestyle{fancy}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \RequirePackage{newunicodechar}
-\RequirePackage{mathptm}
 \graphicspath{{/Users/zhangyingjie/var/data/img/}}
 \setCJKmainfont{STSong}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                  %
+%   redefine some symbols for Chinese math style   %
+%                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newunicodechar{Ⅰ}{\text{$\mathrm{I}$}}
+\newunicodechar{Ⅱ}{\text{$\mathrm{II}$}}
+\newunicodechar{Ⅲ}{\text{$\mathrm{III}$}}
+\newunicodechar{Ⅳ}{\text{$\mathrm{IV}$}}
+\newunicodechar{Ⅴ}{\text{$\mathrm{V}$}}
+\newunicodechar{Ⅵ}{\text{$\mathrm{VI}$}}
+\newunicodechar{Ⅶ}{\text{$\mathrm{VII}$}}
+\newunicodechar{Ⅷ}{\text{$\mathrm{VIII}$}}
+\newunicodechar{Ⅸ}{\text{$\mathrm{IX}$}}
+\newunicodechar{Ⅹ}{\text{$\mathrm{X}$}}
+\newunicodechar{①}{\text{\ding{172}}}
+\newunicodechar{②}{\text{\ding{173}}}
+\newunicodechar{③}{\text{\ding{174}}}
+\newunicodechar{④}{\text{\ding{175}}}
+\newunicodechar{⑤}{\text{\ding{176}}}
+\newunicodechar{⑥}{\text{\ding{177}}}
+\newunicodechar{⑦}{\text{\ding{178}}}
+\newunicodechar{⑧}{\text{\ding{179}}}
+\newunicodechar{⑨}{\text{\ding{180}}}
+\newunicodechar{⑩}{\text{\ding{181}}}
+\newunicodechar{∴}{\text{\raisebox{0.15em}{$\therefore$}}}
+\newunicodechar{∵}{\text{\raisebox{0.15em}{$\because$}}}
+\DeclareMathSizes{10}{10}{5}{5}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                  %
+%         fix some math formula appearance         %
+%                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% dfrac appearance
+\newlength{\fracsep}
+\setlength{\fracsep}{.15em}
+\def\dfrac#1#2{
+    \genfrac{}{}{}0{
+        \raisebox{-0.15em}{\hspace*{\fracsep}$#1$\hspace*{\fracsep}}
+    }{
+        \hspace*{\fracsep}#2\hspace*{\fracsep}
+    }
+}
+% cong, sim, parallel appearance
+\renewcommand{\cong}{
+    \text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+224C.pdf}}}
+}
+\renewcommand{\parallel}{
+    \text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+2225.pdf}}}
+}
+\renewcommand{\backsim}{
+    \text{\raisebox{-0.2em}{\includegraphics[height=1.2em]{U+223D.pdf}}}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                  %
+%             item & paper structure               %
+%                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \catcode`\^^M=10 % treat return as space
 \linespread{1.2}
 \columnsep=15pt
@@ -363,48 +422,4 @@
     \CJKfontspec{STKaiti}% redefine in Windows or Linux, default for OS X
     \fontsize{8pt}{8pt}\selectfont
 }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                  %
-%   redefine some symbols for Chinese math style   %
-%                                                  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\renewcommand{\cong}{%
-    \text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+224C.pdf}}}
-}
-\renewcommand{\parallel}{%
-    \text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+2225.pdf}}}
-}
-\renewcommand{\backsim}{%
-    \text{\raisebox{-0.2em}{\includegraphics[height=1.2em]{U+223D.pdf}}}
-}
-\newunicodechar{Ⅰ}{\text{$\mathrm{I}$}}
-\newunicodechar{Ⅱ}{\text{$\mathrm{II}$}}
-\newunicodechar{Ⅲ}{\text{$\mathrm{III}$}}
-\newunicodechar{Ⅳ}{\text{$\mathrm{IV}$}}
-\newunicodechar{Ⅴ}{\text{$\mathrm{V}$}}
-\newunicodechar{Ⅵ}{\text{$\mathrm{VI}$}}
-\newunicodechar{Ⅶ}{\text{$\mathrm{VII}$}}
-\newunicodechar{Ⅷ}{\text{$\mathrm{VIII}$}}
-\newunicodechar{Ⅸ}{\text{$\mathrm{IX}$}}
-\newunicodechar{Ⅹ}{\text{$\mathrm{X}$}}
-\newunicodechar{①}{\text{\ding{172}}}
-\newunicodechar{②}{\text{\ding{173}}}
-\newunicodechar{③}{\text{\ding{174}}}
-\newunicodechar{④}{\text{\ding{175}}}
-\newunicodechar{⑤}{\text{\ding{176}}}
-\newunicodechar{⑥}{\text{\ding{177}}}
-\newunicodechar{⑦}{\text{\ding{178}}}
-\newunicodechar{⑧}{\text{\ding{179}}}
-\newunicodechar{⑨}{\text{\ding{180}}}
-\newunicodechar{⑩}{\text{\ding{181}}}
-\newunicodechar{∴}{\text{\raisebox{0.15em}{$\therefore$}}}
-\newunicodechar{∵}{\text{\raisebox{0.15em}{$\because$}}}
-\DeclareMathSizes{10}{10}{5}{5}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                  %
-%   redefine some symbols for Chemistry ce style   %
-%                                                  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\gt}{\ {>}\ }
-\newcommand{\lt}{\ {<}\ }
-\def\sum{\mathchar"1353 }
+

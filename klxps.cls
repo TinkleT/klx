@@ -1,11 +1,10 @@
-%% This is file 'klxpp.cls',
-%% Used for klx latex render. 
-%% Typically for math multiple items render, standalone 
+%% This is file 'klxps.cls',
+%% Used for klx latex render. Typically for math paper and answer sheet render
+
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-\ProvidesClass{klxpp}[2016/06/28 v0.1 test]
-%\LoadClass{article}
-\LoadClass[10pt]{standalone}
-%\RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
+\ProvidesClass{klxps}[2016/06/28 v0.1 test]
+\LoadClass[twocolumn]{article}
+\RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
 \RequirePackage[CJKmath=true]{xeCJK}
 \RequirePackage{varwidth,calc}
 \RequirePackage{amsmath, amssymb, yhmath}
@@ -16,10 +15,69 @@
 \pagestyle{fancy}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \RequirePackage{newunicodechar}
-\RequirePackage{mathptm}
-%\standaloneconfig{border={0pt 0pt 0pt 0pt}}% used for multi-items test
 \graphicspath{{/Users/zhangyingjie/var/data/img/}}
 \setCJKmainfont{STSong}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                  %
+%   redefine some symbols for Chinese math style   %
+%                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newunicodechar{Ⅰ}{\text{$\mathrm{I}$}}
+\newunicodechar{Ⅱ}{\text{$\mathrm{II}$}}
+\newunicodechar{Ⅲ}{\text{$\mathrm{III}$}}
+\newunicodechar{Ⅳ}{\text{$\mathrm{IV}$}}
+\newunicodechar{Ⅴ}{\text{$\mathrm{V}$}}
+\newunicodechar{Ⅵ}{\text{$\mathrm{VI}$}}
+\newunicodechar{Ⅶ}{\text{$\mathrm{VII}$}}
+\newunicodechar{Ⅷ}{\text{$\mathrm{VIII}$}}
+\newunicodechar{Ⅸ}{\text{$\mathrm{IX}$}}
+\newunicodechar{Ⅹ}{\text{$\mathrm{X}$}}
+\newunicodechar{①}{\text{\ding{172}}}
+\newunicodechar{②}{\text{\ding{173}}}
+\newunicodechar{③}{\text{\ding{174}}}
+\newunicodechar{④}{\text{\ding{175}}}
+\newunicodechar{⑤}{\text{\ding{176}}}
+\newunicodechar{⑥}{\text{\ding{177}}}
+\newunicodechar{⑦}{\text{\ding{178}}}
+\newunicodechar{⑧}{\text{\ding{179}}}
+\newunicodechar{⑨}{\text{\ding{180}}}
+\newunicodechar{⑩}{\text{\ding{181}}}
+\newunicodechar{∴}{\text{\raisebox{0.15em}{$\therefore$}}}
+\newunicodechar{∵}{\text{\raisebox{0.15em}{$\because$}}}
+\DeclareMathSizes{10}{10}{5}{5}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                  %
+%         fix some math formula appearance         %
+%                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% dfrac appearance
+\newlength{\fracsep}
+\setlength{\fracsep}{.15em}
+\def\dfrac#1#2{
+    \genfrac{}{}{}0{
+        \raisebox{-0.15em}{\hspace*{\fracsep}$#1$\hspace*{\fracsep}}
+    }{
+        \hspace*{\fracsep}#2\hspace*{\fracsep}
+    }
+}
+% cong, sim, parallel appearance
+\renewcommand{\cong}{
+    \text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+224C.pdf}}}
+}
+\renewcommand{\parallel}{
+    \text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+2225.pdf}}}
+}
+\renewcommand{\backsim}{
+    \text{\raisebox{-0.2em}{\includegraphics[height=1.2em]{U+223D.pdf}}}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                  %
+%             item & paper structure               %
+%                                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \catcode`\^^M=10 % treat return as space
 \linespread{1.2}
 \columnsep=15pt
@@ -56,6 +114,8 @@
 \renewcommand{\headrulewidth}{0pt}
 \newcommand{\dq}{\mbox{(\qquad)}}
 \newcommand{\dd}{\mbox{\ \rule[-.25ex]{4em}{.5pt}}}
+
+
 \newcommand{\fourch}[4]{% 四个选项一行
     \par%
     \begin{tabular}{*{4} {@{} p{0.23\optwidth}}}
@@ -82,7 +142,6 @@
 \newlength{\maxw}
 \newcommand{\imgch}[8]{
     \par
-    \tabcolsep=0pt
     \settowidth{\cha}{#1}
     \settowidth{\chb}{#3}
     \settowidth{\chc}{#5}
@@ -92,8 +151,9 @@
     \addtolength{\cha}{\chc}
     \ifthenelse{\lengthtest{\cha = 0mm}}
     {%then no text in img_opts 
-    \begin{tabular}{*{4} {@{} |p{0.22\optwidth}|}}  \hline
-    {\centering \resizebox{0.22\optwidth}{!}{#2}} &  {\centering \resizebox{0.22\optwidth}{!}{#4}} & {\centering \resizebox{0.22\optwidth}{!}{#6}} &  {\centering \resizebox{0.22\optwidth}{!}{#8}} \\\hline
+
+    \hspace*{-5pt}\begin{tabular}{cccc}  
+    \fbox{#2} &  \fbox{#4} & \fbox{#6} &  \fbox{#8} \\
     A & B & C & D 
     \end{tabular}
     }
@@ -177,7 +237,11 @@
 \addtolength{\sbcontl}{-1em}
 \setlength{\ssbcontl}{\sbcontl}
 \addtolength{\ssbcontl}{-1em}
-\newenvironment{questions}{}{}
+\newenvironment{questions}{% env for each item
+    \stepcounter{nq}
+    }{
+    \par
+}
 %\newenvironment{subquestions}{%
 %\begin{minipage}[t]{\indexlength}\wqq\end{minipage}\begin{minipage}[t]{\subcontentlength}
 %}{%
@@ -185,23 +249,24 @@
 %} 
 \newenvironment{subquestions}{\begin{enumerate*}}{\end{enumerate*}}
 \newenvironment{subsubquestions}{
-    \begin{enumerate*}
+        \begin{enumerate*}
     }{
     \end{enumerate*}
 }
 
 \newcommand{\klxitem}[4]{
-    \begin{varwidth}{#4}
+
+    %\begin{varwidth}{#4}
     \setlength{\optwidth}{\textwidth}
     \settoheight{\imgheight}{#3}
     \settowidth{\imgwidth}{#3}
-    \ifthenelse{\lengthtest{\imgheight = 0pt}}
-        {\setlength{\imgwidth}{0pt}}
-        {\addtolength{\optwidth}{-1\imgwidth}}
+    \ifthenelse{\lengthtest{\imgheight = 0pt}}{\setlength{\imgwidth}{0pt}}{\addtolength{\optwidth}{-1\imgwidth}}
     %\showthe\optwidth
     %\showthe\textwidth
     \savebox{\descbox}{\parbox[t]{\optwidth}{#1}}
-    \savebox{\optbox}{\parbox[t]{\optwidth}{#1 \ \\ #2}}
+    \savebox{\optbox}{\parbox[t]{\optwidth}{
+    #1 \ \\ #2
+    }}
     \settoheight{\descheight}{\usebox{\descbox}}
     \settodepth{\descdepth}{\usebox{\descbox}}
     \setlength{\desctotalheight}{\descheight}
@@ -213,49 +278,49 @@
     \addtolength{\opttotalheight}{\optdepth}
     \addtolength{\heightdiff}{\imgheight}
     \addtolength{\heightdiff}{-1\opttotalheight}
-    \ifthenelse{\lengthtest{\heightdiff > 0pt}}%
-        {\setlength{\comlength}{\heightdiff}}%
-        {}%
-    \savebox{\combox}{%
-        \parbox[t]{\optwidth}{%
-            #1 \ \\ #2 \vspace*{\comlength} 
+    \ifthenelse{\lengthtest{\heightdiff > 0pt}}{\setlength{\comlength}{\heightdiff}}{}
+    \savebox{\combox}{\parbox[t]{\optwidth}{#1 \ \\ #2 
+    \vspace*{\comlength} 
         }
     }
-    \ifthenelse{\lengthtest{\imgheight = 0pt}}%
-        {\def\idxcor{\relax}}
-        {\setlength{\idxcorheight}{\descheight}%
-        \addtolength{\idxcorheight}{0pt}%
-        \def\idxcor{\vspace*{\idxcorheight}}
-        }
+    \ifthenelse{\lengthtest{\imgheight = 0pt}}{\def\idxcor{\relax}}{\setlength{\idxcorheight}{\descheight}%
+    \addtolength{\idxcorheight}{0pt}%
+    \def\idxcor{\vspace*{\idxcorheight}}}
     %\showthe\idxcorheight
-    %\hrule height-\idxcorheight depth-\idxcorheight
+    \begin{minipage}[t]{\indexlength}
+%    \hrule height-\idxcorheight depth-\idxcorheight
     %\idxcor
-    \begin{minipage}[t]{\optwidth}
+    \hfill \thenq. 
+    \end{minipage}\hspace*{\idxsep}\begin{minipage}[t]{\contl}
     %\vspace{0pt}
-    %\vspace*{-\descheight}
+   % \vspace*{-\descheight}
     \ifthenelse{\lengthtest{\imgheight = 0pt}}
-        {\parbox[t]{\optwidth}{#1}#2}
-        {\begin{window}[0,r,{#3},{}]
-        \ifthenelse{\lengthtest{\desctotalheight > \imgheight}}
-            {#1 \end{window} \setlength{\optwidth}{\textwidth} #2}
-            {\ifthenelse{\lengthtest{\opttotalheight > \imgheight}}
-                {\usebox{\optbox}}
-                {\usebox{\combox}}
-                \end{window}
-            }
+        { % then
+        \parbox[t]{\optwidth}{#1} #2
         }
-    \showthe\textwidth
-    \showthe\contl
-    \showthe\optwidth
-    \showthe\imgwidth
-    \showthe\textwidth
-    \showthe\descheight
-    \showthe\descdepth
-    \showthe\imgheight
-    \showthe\opttotalheight
-    \showthe\comlength
+        { % else
+        %\vspace*{-.4em}
+        \begin{window}[0,r,{#3},{}]
+        \ifthenelse{\lengthtest{\desctotalheight > \imgheight}}
+            { % then
+            #1 
+            \end{window} \setlength{\optwidth}{\textwidth}
+             #2 }
+            { % else
+            \ifthenelse{\lengthtest{\opttotalheight > \imgheight}}
+                {\usebox{\optbox}}
+                {\usebox{\combox}}\end{window}}}
+    %\showthe\optwidth
+    %\showthe\imgwidth
+    %\showthe\textwidth
+    %\showthe\descheight
+    %\showthe\descdepth
+    %\showthe\imgheight
+    %\showthe\opttotalheight
+    %\showthe\comlength
+    %\end{varwidth}
     \end{minipage}
-    \end{varwidth}
+
 }
 \newcommand{\klxitemm}[2]{
     \settowidth{\imgwidth}{#1}
@@ -357,61 +422,4 @@
     \CJKfontspec{STKaiti}% redefine in Windows or Linux, default for OS X
     \fontsize{8pt}{8pt}\selectfont
 }
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                  %
-%   redefine some symbols for Chinese math style   %
-%                                                  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\renewcommand{\cong}{
-    \text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+224C.pdf}}}
-}
-\renewcommand{\parallel}{
-    \text{\raisebox{-0.2em}{\includegraphics[height=1em]{U+2225.pdf}}}
-}
-\renewcommand{\backsim}{
-    \text{\raisebox{-0.2em}{\includegraphics[height=1.2em]{U+223D.pdf}}}
-}
-\newunicodechar{Ⅰ}{\text{$\mathrm{I}$}}
-\newunicodechar{Ⅱ}{\text{$\mathrm{II}$}}
-\newunicodechar{Ⅲ}{\text{$\mathrm{III}$}}
-\newunicodechar{Ⅳ}{\text{$\mathrm{IV}$}}
-\newunicodechar{Ⅴ}{\text{$\mathrm{V}$}}
-\newunicodechar{Ⅵ}{\text{$\mathrm{VI}$}}
-\newunicodechar{Ⅶ}{\text{$\mathrm{VII}$}}
-\newunicodechar{Ⅷ}{\text{$\mathrm{VIII}$}}
-\newunicodechar{Ⅸ}{\text{$\mathrm{IX}$}}
-\newunicodechar{Ⅹ}{\text{$\mathrm{X}$}}
-\newunicodechar{①}{\text{$\ding{172}$}}
-\newunicodechar{②}{\text{$\ding{173}$}}
-\newunicodechar{③}{\text{$\ding{174}$}}
-\newunicodechar{④}{\text{$\ding{175}$}}
-\newunicodechar{⑤}{\text{$\ding{176}$}}
-\newunicodechar{⑥}{\text{$\ding{177}$}}
-\newunicodechar{⑦}{\text{$\ding{178}$}}
-\newunicodechar{⑧}{\text{$\ding{179}$}}
-\newunicodechar{⑨}{\text{$\ding{180}$}}
-\newunicodechar{⑩}{\text{$\ding{181}$}}
-\newunicodechar{∴}{\text{\raisebox{0.15em}{$\therefore$}}}
-\newunicodechar{∵}{\text{\raisebox{0.15em}{$\because$}}}
-\DeclareMathSizes{10}{10}{5}{5}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                  %
-%   redefine some symbols for Chemistry ce style   %
-%                                                  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand{\gt}{\ {>}\ }
-\newcommand{\lt}{\ {<}\ }
-\def\sum{\mathchar"1353 }
-%\standaloneenv{questions}% used for multi-items test
-\standaloneconfig{multi={varwidth},crop=true}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                  %
-%         fix some math formula appearance         %
-%                                                  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% dfrac appearance
-\newlength{\fracsep}
-\setlength{\fracsep}{.15em}
-\def\dfrac#1#2{\genfrac{}{}{}0{\hspace*{\fracsep}#1\hspace*{\fracsep}}{\hspace*{\fracsep}#2\hspace*{\fracsep}}}
 
