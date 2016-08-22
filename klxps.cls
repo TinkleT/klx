@@ -3,21 +3,27 @@
 
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
 \ProvidesClass{klxps}[2016/06/28 v0.1 test]
-\LoadClass[twocolumn]{article}
-\RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
+\LoadClass{article}
+%\RequirePackage[paperwidth=195mm,paperheight=270mm,left=8mm,right=12mm,top=16mm,bottom=4mm,includefoot]{geometry}
+%\usepackage[paperwidth=21.00cm, paperheight=29.70cm, left=2.40cm, right=2.40cm, top=5.85cm, bottom=2.70cm]{geometry}% Specified for answersheet layout
+% Specified for answersheet layout
 \RequirePackage[CJKmath=true]{xeCJK}
+
 \RequirePackage{varwidth,calc}
 \RequirePackage{amsmath, amssymb, yhmath}
 \RequirePackage{graphicx,ulem}
+\RequirePackage{multicol}
 \RequirePackage{mathrsfs}
 \RequirePackage[version=4]{mhchem}
 \RequirePackage{pifont, picinpar, picins, fancyhdr,lastpage}
-\pagestyle{fancy}
+\pagestyle{empty}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \RequirePackage{newunicodechar}
+\RequirePackage{zref-user}
+\RequirePackage{zref-abspos}
 \graphicspath{{/Users/zhangyingjie/var/data/img/}}
+\usepackage[paperwidth=595.28pt, paperheight=841.89pt, left=2.40cm, right=2.40cm, top=5.85cm, bottom=2.70cm]{geometry}
 \setCJKmainfont{STSong}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                  %
 %   redefine some symbols for Chinese math style   %
@@ -53,6 +59,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % dfrac appearance
+
 \newlength{\fracsep}
 \setlength{\fracsep}{.15em}
 \def\dfrac#1#2{
@@ -78,10 +85,28 @@
 %                                                  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%% Counters %%%%%%%%%%%%%%%%%%%%%
+\newcounter{ns}
+\newcounter{nq}
+\newcounter{nqq}[nq]
+\newcounter{nqqq}[nqq]
+\newcommand{\wq}{ 
+    %\stepcounter{nq}
+    \thenq.\hspace{.6em}}
+%\newcommand{\wqq}{\stepcounter{nqq}\item[(\thenqq)]}
+\newcommand{\wqq}{
+    \stepcounter{nqq}
+    \item[(\thenqq)]%
+}
+\newcommand{\wqqq}{\stepcounter{nqqq}\item[(\roman{nqqq})]}
+\newcommand{\wns}[1]{\stepcounter{ns}{\bf \CJKnumber{\thens}、#1}}
+\newcommand{\ws}[2]{\begin{minipage}[t]{\textwidth} {\heiti \wns #1 } #2 \end{minipage} }
+
+
 \catcode`\^^M=10 % treat return as space
 \linespread{1.2}
 \columnsep=15pt
-\columnseprule=.5pt
+\columnseprule=0pt
 \setlength{\fboxsep}{0pt}
 \setlength{\fboxrule}{0pt}
 \newlength{\imglength}
@@ -114,24 +139,47 @@
 \renewcommand{\headrulewidth}{0pt}
 \newcommand{\dq}{\mbox{(\qquad)}}
 \newcommand{\dd}{\mbox{\ \rule[-.25ex]{4em}{.5pt}}}
-
+\newcounter{CheckBoxX}
+\setcounter{CheckBoxX}{29054895}
+\newlength{\CheckBoxSep}
+\setlength{\CheckBoxSep}{1.2mm}
+\newcommand{\CheckBox}{\zsaveposx{\thenq_pos}\ifnum\zposx{\thenq_pos}>\theCheckBoxX \par \else \relax\fi \hfill \fboxrule.4pt\fboxsep0pt\raisebox{-5pt}{\zsavepos{\thenq_CheckBox_ll}\framebox[9mm][c]{\rule{0pt}{4.3mm}}\hspace{\CheckBoxSep}\framebox[9mm][c]{\rule{0pt}{4.3mm}}\hspace{\CheckBoxSep}\framebox[9mm][c]{\rule{0pt}{4.3mm}}}%
+    \immediate\write\MyWrite{%
+        \thenq_CheckBox_ll: (\the\dimexpr\zposx{\thenq_CheckBox_ll}sp, \the\dimexpr\zposy{\thenq_CheckBox_ll}sp)%
+    }
+}
+\DeclareFixedFont{\cbfont}{OT1}{put}{m}{n}{8}
+\newcommand{\ChoiceBox}[1]{%
+    \fboxsep=1.1pt\fboxrule=.4pt%
+    \framebox[6mm][l]{%
+        \zsavepos{\thenq_#1_ll}%
+        \hspace*{-.5pt}\cbfont{#1}%
+    }%
+    \immediate\write\MyWrite{%
+        \thenq_ChoiceBox_#1: (\the\dimexpr\zposx{\thenq_#1_ll}sp-\fboxsep, \the\dimexpr\zposy{\thenq_#1_ll}sp-\fboxsep)%
+    }%
+}
+\newcommand{\AnswerBox}[1]{\fboxrule0.4pt\fbox{\begin{minipage}[t]{\textwidth}\begin{multicols}{2}\color{white}\fontsize{8}{8}\selectfont #1 \par \end{multicols}\end{minipage}}}
 
 \newcommand{\fourch}[4]{% 四个选项一行
     \par%
     \begin{tabular}{*{4} {@{} p{0.23\optwidth}}}
-    A. #1 & B. #2 & C. #3 & D. #4 
+    \ChoiceBox{A} #1 & \ChoiceBox{B} #2 & \ChoiceBox{C} #3 & \ChoiceBox{D} #4 
     \end{tabular}
 }
 \newcommand{\twoch}[4]{% 两个选项一行
     \par%
     \begin{tabular}{*{2} {@{} p{0.46\optwidth}}}
-    A. #1 & B. #2 
-    \end{tabular}
-    \begin{tabular}{*{2} {@{} p{0.46\optwidth}}}
-    C. #3 & D. #4 
+    \ChoiceBox{A} #1 & \ChoiceBox{B} #2 \\
+    \ChoiceBox{C} #3 & \ChoiceBox{D} #4 
     \end{tabular}
 }
-\newcommand{\onech}[4]{\par A. #1 \\ B. #2 \\ C. #3 \\ D. #4}
+\newcommand{\onech}[4]{\par%
+\ChoiceBox{A} \hangafter1\hangindent=20pt#1 \par%
+\ChoiceBox{B} \hangafter1\hangindent=20pt#2 \par%
+\ChoiceBox{C} \hangafter1\hangindent=20pt#3 \par%
+\ChoiceBox{D} \hangafter1\hangindent=20pt#4 \par%
+}
 %\newcommand{\imgch}[4]{
 % \begin{tabular}{cccc}  \fbox{#1} &  \fbox{#2} & \fbox{#3} &  \fbox{#4} \\ A & B & C & D \end{tabular}}
 \newlength{\cha}
@@ -140,8 +188,7 @@
 \newlength{\chd}
 \newlength{\che}
 \newlength{\maxw}
-\newcommand{\imgch}[8]{
-    \par
+\newcommand{\imgch}[8]{\def\arraystretch{0.4}%
     \settowidth{\cha}{#1}
     \settowidth{\chb}{#3}
     \settowidth{\chc}{#5}
@@ -151,24 +198,22 @@
     \addtolength{\cha}{\chc}
     \ifthenelse{\lengthtest{\cha = 0mm}}
     {%then no text in img_opts 
-
-    \hspace*{-5pt}\begin{tabular}{cccc}  
-    \fbox{#2} &  \fbox{#4} & \fbox{#6} &  \fbox{#8} \\
-    A & B & C & D 
+    \hspace*{-5pt}\begin{tabular}{*{4} {@{} p{0.248\optwidth}}c}
+    \centering #2 & \centering #4 & \centering #6 & \centering #8 &\\
+    \centering \ChoiceBox{A} & \centering \ChoiceBox{B} & \centering \ChoiceBox{C} & \centering \ChoiceBox{D}   &\\
     \end{tabular}
     }
     {%else some text in img_opts
-
-    \hspace*{-0.5em}\begin{tabular}{*{4} {@{} p{0.23\optwidth}}c}
+    \hspace*{-0.5em}\begin{tabular}{*{4} {@{} p{0.248\optwidth}}c}
     \centering #2 & \centering #4 & \centering #6 & \centering #8 &\\
-    \parbox{0.23\optwidth}{ \centering #1} & \parbox{0.23\optwidth}{\centering #3} & \parbox{0.23\optwidth}{\centering #5} &  \parbox{0.23\optwidth}{\centering #7} & \\
-    \centering A & \centering B & \centering C & \centering D   &\\
+    \parbox{0.248\optwidth}{ \centering #1} & \parbox{0.248\optwidth}{\centering #3} & \parbox{0.248\optwidth}{\centering #5} &  \parbox{0.248\optwidth}{\centering #7} & \\
+    \centering \ChoiceBox{A} & \centering \ChoiceBox{B} & \centering \ChoiceBox{C} & \centering \ChoiceBox{D}   &\\
     \end{tabular}
     }
 }
 \setlength{\parindent}{0em}
 \setlength{\parskip}{0pt}
-\newcommand{\ch}[8]{
+\newcommand{\ch}[8]{\def\arraystretch{0.4}%
     \settowidth{\cha}{A. #1}
     \settowidth{\chb}{B. #3}
     \settowidth{\chc}{C. #5}
@@ -180,20 +225,20 @@
     {\onech{#1}{#3}{#5}{#7}}
     {\ifthenelse{\lengthtest{\maxw >0.23\optwidth}}{\twoch{#1}{#3}{#5}{#7}}{\fourch{#1}{#3}{#5}{#7}}}
 }
-\newcommand{\trech}[6]{% 三个选项的选择题
-    \par
-    \settowidth{\cha}{A. #1}
-    \settowidth{\chb}{B. #3}
-    \settowidth{\chc}{C. #5}
-    \setlength{\maxw}{\cha}
-    \ifthenelse{\lengthtest{\chb > \maxw}}{\setlength{\maxw}{\chb}}{}
-    \ifthenelse{\lengthtest{\chc > \maxw}}{\setlength{\maxw}{\chc}}{}
+\newcommand{\trech}[6]{\def\arraystretch{0.4}%% 三个选项的选择题
+    \par%
+    \settowidth{\cha}{A. #1}%
+    \settowidth{\chb}{B. #3}%
+    \settowidth{\chc}{C. #5}%
+    \setlength{\maxw}{\cha}%
+    \ifthenelse{\lengthtest{\chb > \maxw}}{\setlength{\maxw}{\chb}}{}%
+    \ifthenelse{\lengthtest{\chc > \maxw}}{\setlength{\maxw}{\chc}}{}%
     \ifthenelse{\lengthtest{\maxw > 0.31\optwidth}}{% then 
-           A. #1 \\ B. #3 \\ C. #5 }{% else three opts in one line
-         \begin{tabular}{*{3} {@{} p{0.33\optwidth}}}A. #1 & B. #3 & C. #5 \end{tabular}
-        }
+           \ChoiceBox{A} #1 \\ \ChoiceBox{B} #3 \\ \ChoiceBox{C} #5 }{% else three opts in one line
+         \begin{tabular}{*{3} {@{} p{0.33\optwidth}}}\ChoiceBox{A} #1 & \ChoiceBox{B} #3 & \ChoiceBox{C} #5 \end{tabular}%
+        }%
 }
-\newcommand{\fivch}[9]{% 五个选项的选择题
+\newcommand{\fivch}[9]{\def\arraystretch{0.4}%% 五个选项的选择题
     \par
     \settowidth{\cha}{A. #1}
     \settowidth{\chb}{B. #3}
@@ -205,27 +250,13 @@
     \ifthenelse{\lengthtest{\chc > \maxw}}{\setlength{\maxw}{\chc}}{}
     \ifthenelse{\lengthtest{\chd > \maxw}}{\setlength{\maxw}{\chd}}{}
     \ifthenelse{\lengthtest{\che > \maxw}}{\setlength{\maxw}{\che}}{}
-    \ifthenelse{\lengthtest{\maxw > 0.19\optwidth}}{% then 
-         A. #1 \\ B. #3 \\ C. #5 \\ D. #7 \\ E. #9}{% else 
-         \begin{tabular}{*{5} {@{} p{0.19\optwidth}}} A. #1 & B. #3 & C. #5 & D. #7 & E. #9 \end{tabular}
+    \ifthenelse{\lengthtest{\maxw > 0.198\optwidth}}{% then 
+         \ChoiceBox{A} #1 \\ \ChoiceBox{B} #3 \\ \ChoiceBox{C} #5 \\ \ChoiceBox{D} #7 \\ \ChoiceBox{E} #9}{% else 
+         \begin{tabular}{*{5} {@{} p{0.198\optwidth}}} \ChoiceBox{A} #1 & \ChoiceBox{B} #3 & \ChoiceBox{C} #5 & \ChoiceBox{D} #7 & \ChoiceBox{E} #9 \end{tabular}
         }
 }
 
-\newcounter{ns}
-\newcounter{nq}
-\newcounter{nqq}[nq]
-\newcounter{nqqq}[nqq]
-\newcommand{\wq}{ 
-    %\stepcounter{nq}
-    \thenq.\hspace{.6em}}
-%\newcommand{\wqq}{\stepcounter{nqq}\item[(\thenqq)]}
-\newcommand{\wqq}{
-    \stepcounter{nqq}
-    \item[(\thenqq)]%
-}
-\newcommand{\wqqq}{\stepcounter{nqqq}\item[(\roman{nqqq})]}
-\newcommand{\wns}[1]{\stepcounter{ns}{\bf \CJKnumber{\thens}、#1}}
-\newcommand{\ws}[2]{\begin{minipage}[t]{\textwidth} {\heiti \wns #1 } #2 \end{minipage} }
+
 \newlength{\indexlength}
 \newlength{\contl}
 \newlength{\sbcontl}
@@ -332,9 +363,6 @@
     \setlength{\optwidth}{\contl}
     \begin{minipage}[t]{\indexlength}
     \hfill \thenq.
-%    \settowidth{\imgwidth}{#3}
-    %\showthe\contl
-
     \end{minipage}\hspace*{\idxsep}%
     \begin{minipage}[t]{\contl}
     #2
@@ -343,8 +371,6 @@
     \vspace{-1em}%
     #1
     \end{minipage}
-    %\showthe\imgwidth
-    %\showthe\contl
 }
 \newcommand{\klxitemans}[1]{
     \thenq. #1 
@@ -422,4 +448,5 @@
     \CJKfontspec{STKaiti}% redefine in Windows or Linux, default for OS X
     \fontsize{8pt}{8pt}\selectfont
 }
-
+\newwrite\MyWrite
+\immediate\openout\MyWrite=\jobname.pos\relax

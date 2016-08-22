@@ -80,23 +80,15 @@
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                  %
-%               font specificaton                  %
-%                                                  %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\DeclareFixedFont{\chfont}{OT1}{put}{m}{n}{8}% used for choice frame 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%                                                  %
 %             item & paper structure               %
 %                                                  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
-\linespread{1}
-\setlength{\fboxsep}{1.5pt}
-\setlength{\fboxrule}{.4pt}
+\linespread{1.2}
+\setlength{\fboxsep}{0pt}
+\setlength{\fboxrule}{1pt}
 \setlength{\parindent}{0em}
 \setlength{\parskip}{0em}
 \newlength{\imglength}
@@ -114,7 +106,6 @@
 \newlength{\heightdiff}
 \newlength{\comlength}
 \newlength{\choicewidth}
-\newlength{\choiceheight}
 \newlength{\idxsep}
 \setlength{\idxsep}{.3em}
 \newlength{\imgsep}
@@ -124,18 +115,15 @@
 \newsavebox{\combox}
 \setlength{\comlength}{0pt}
 \setlength{\heightdiff}{0pt}
-\newlength{\optidx}
-\settowidth{\optidx}{A. }
-\newcommand{\CF}[1]{\framebox[18pt][l]{\hspace*{-1pt}\chfont{#1}}}
 \newcommand{\dq}{\mbox{(\qquad)}}
 \newcommand{\dd}{\mbox{\rule[-.2ex]{4em}{.5pt}}}
 \newcommand{\displayimages}[1]{\resizebox{\textwidth}{!}{#1}}
 \newcommand{\fourch}[4]% 四个选项一行
-{\tabcolsep=0pt\showthe\optwidth\begin{tabular}{*{4} {@{} p{0.249\optwidth}}} \CF{A} #1 & \CF{B} #2 & \CF{C} #3 & \CF{D} #4\end{tabular}}
+{\begin{tabular}{*{4} {@{} p{0.248\optwidth}}} A. #1 & B. #2 & C. #3 & D. #4\end{tabular}}
 \newcommand{\twoch}[4]% 两个选项一行
 {\begin{tabular}{*{2} {@{} p{0.46\optwidth}}} A. #1 & B. #2 \end{tabular}
 \begin{tabular}{*{2} {@{} p{0.46\optwidth}}}C. #3 & D. #4 \end{tabular}}
-\newcommand{\onech}[4]{  A. \parbox[t]{\optwidth-\optidx}{#1} \\[2pt] B. \parbox[t]{\optwidth-\optidx}{#2}\\[2pt] C. \parbox[t]{\optwidth-\optidx}{#3} \\[2pt] D. \parbox[t]{\optwidth-\optidx}{#4}}
+\newcommand{\onech}[4]{  A. #1 \\ B. #2 \\ C. #3 \\ D. #4}
 %\newcommand{\imgch}[4]{
 % \begin{tabular}{cccc}  \fbox{#1} &  \fbox{#2} & \fbox{#3} &  \fbox{#4} \\ A & B & C & D \end{tabular}}
 \newlength{\cha}
@@ -154,7 +142,7 @@
     }{#1}{\ifthenelse{\lengthtest{\imgwidth > \imgheight}}{\resizebox{\choicedimen}{!}{#1}}{\resizebox{!}{\choicedimen}{#1}}
     }   
 }
-\newcommand{\imgch}[8]{
+\newcommand{\imgch}[8]{\def\arraystretch{0.4}%
     \settowidth{\cha}{#1}
     \settowidth{\chb}{#3}
     \settowidth{\chc}{#5}
@@ -164,7 +152,7 @@
     \addtolength{\cha}{\chc}
     \ifthenelse{\lengthtest{\cha = 0mm}}
     {\tabcolsep=1pt \centering%then no text in img_opts 
-    \begin{tabular}{*{4} {@{} p{0.23\optwidth}}}  
+    \begin{tabular}{*{4} {@{} p{0.248\optwidth}}}  
         \centering \choiceimg{#2}&\centering \choiceimg{#4}&\centering \choiceimg{#6}&\centering \choiceimg{#8}\tabularnewline%
         \centering A&\centering B&\centering C&\centering D%
     \end{tabular}}%
@@ -253,10 +241,10 @@
 \newlength{\ChoiceWidth}
 \newlength{\ChoiceHeight}
 \newcommand{\klxchoice}[1]{%
-    {#1}%
     \savebox{\Choice}{#1}%
-    \settowidth{\ChoiceWidth}{\usebox{\Choice}}%
-    \settototalheight{\ChoiceHeight}{\usebox{\Choice}}%
+    \settowidth{\ChoiceWidth}{\Choice}%
+    \settototalheight{\ChoiceHeight}{\Choice}%
+    \usebox{\Choice}%
     \showthe\ChoiceWidth\showthe\ChoiceHeight%
 }
 \newcommand{\klxitem}[5]{%
@@ -266,8 +254,6 @@
     \stepcounter{nq}%
     \begin{varwidth}{#4}%
     \settowidth{\choicewidth}{#2}%
-    \settototalheight{\choiceheight}{#2}%
-    \showthe\choiceheight%
     \ifthenelse{\lengthtest{\choicewidth=0pt}}{}{\def\dd{\mbox{(\qquad)}}}%
 %    \showthe\textwidth
     \setlength{\optwidth}{\textwidth}%
@@ -292,16 +278,16 @@
     \ifthenelse{\lengthtest{\heightdiff > 0pt}}{\setlength{\comlength}{\heightdiff}}{}%
     \savebox{\combox}{\parbox[t]{\optwidth}{\def\stepcounter{\relax}#1#2\vspace*{\comlength}}}%
     \ifthenelse{\lengthtest{\imgheight = 0pt}}%
-        {\parbox[t]{\optwidth}{#1}\klxchoice{#2}}%
+        {\parbox[t]{\optwidth}{#1}#2}%
         {\begin{window}[0,r,{#3},{}]
         \ifthenelse{\lengthtest{\desctatolheight > \imgheight}}%
             {% then
-            #1\end{window}\setlength{\optwidth}{\textwidth}\klxchoice{#2}}%
+            #1\end{window}\setlength{\optwidth}{\textwidth}#2}%
             {% else
             \ifthenelse{\lengthtest{\opttatolheight > \imgheight}}%
                 %{\usebox{\optbox}}
-                {\parbox[t]{\optwidth}{#1\klxchoice{#2}}}%
-                {\parbox[t]{\optwidth}{#1\klxchoice{#2}\vspace*{\comlength}}}%
+                {\parbox[t]{\optwidth}{#1#2}}%
+                {\parbox[t]{\optwidth}{#1#2\vspace*{\comlength}}}%
                 \end{window}%
             }%
         }%
@@ -312,8 +298,12 @@
 %    \showthe\descdepth
 %    \showthe\imgheight
 %    \showthe\opttatolheight
-    \showthe\comlength
+%    \showthe\comlength
     \end{varwidth}%
+    \settowidth{\ChoiceWidth}{\usebox{\Choice}}%
+    \settototalheight{\ChoiceHeight}{\usebox{\Choice}}%
+    \showthe\ChoiceWidth%
+    \showthe\ChoiceHeight%
     \showthe\value{page}%
     \end{questions}%
 }
