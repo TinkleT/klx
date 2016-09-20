@@ -50,6 +50,8 @@
 \newunicodechar{⑩}{\text{\ding{181}}}
 \newunicodechar{∴}{\text{\raisebox{0.15em}{$\therefore$}}}
 \newunicodechar{∵}{\text{\raisebox{0.15em}{$\because$}}}
+\newunicodechar{∃}{\text{$\exists$}}
+\newunicodechar{∀}{\text{$\forall$}}
 \DeclareMathSizes{10}{10}{5}{5}% Font Size{text}{math}{script}{scriptscript}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -63,7 +65,7 @@
 \setlength{\fracsep}{.15em}
 \def\dfrac#1#2{
     \genfrac{}{}{}0{
-        \raisebox{-0.15em}{\hspace*{\fracsep}$#1$\hspace*{\fracsep}}
+        \raisebox{-0.15em}{\hspace*{\fracsep}$#1$\hspace*{\fracsep}}% extra math switch for raisebox
     }{
         \hspace*{\fracsep}#2\hspace*{\fracsep}
     }
@@ -115,9 +117,15 @@
 \newsavebox{\combox}
 \setlength{\comlength}{0pt}
 \setlength{\heightdiff}{0pt}
+\newlength{\displayimageswidth}
 \newcommand{\dq}{\mbox{(\qquad)}}
 \newcommand{\dd}{\mbox{\rule[-.2ex]{4em}{.5pt}}}
-\newcommand{\displayimages}[1]{\resizebox{\textwidth}{!}{#1}}
+\newcommand{\displayimages}[1]{%
+    \settowidth{\displayimageswidth}{#1}%
+    \ifthenelse{\lengthtest{\displayimageswidth > \textwidth}}%
+    {\setlength{\displayimageswidth}{\textwidth}}%
+    {}%
+    \resizebox{\displayimageswidth}{!}{#1}}
 \newcommand{\fourch}[4]% 四个选项一行
 {\begin{tabular}{*{4} {@{} p{0.248\optwidth}}} A. #1 & B. #2 & C. #3 & D. #4\end{tabular}}
 \newcommand{\twoch}[4]% 两个选项一行
@@ -147,14 +155,14 @@
     \settowidth{\chb}{#3}
     \settowidth{\chc}{#5}
     \settowidth{\chd}{#7}
-    \addtolength{\cha}{\chb}
-    \addtolength{\cha}{\chd}
-    \addtolength{\cha}{\chc}
+    \addtolength{\cha}{\chb}%
+    \addtolength{\cha}{\chd}%
+    \addtolength{\cha}{\chc}%
     \ifthenelse{\lengthtest{\cha = 0mm}}
-    {\tabcolsep=1pt \centering%then no text in img_opts 
-    \begin{tabular}{*{4} {@{} p{0.248\optwidth}}}  
-        \centering \choiceimg{#2}&\centering \choiceimg{#4}&\centering \choiceimg{#6}&\centering \choiceimg{#8}\tabularnewline%
-        \centering A&\centering B&\centering C&\centering D%
+    {\tabcolsep=0pt \centering%then no text in img_opts 
+    \begin{tabular}{*{4} {@{} |p{0.248\optwidth}|}}  
+    \centering \choiceimg{#2}&\centering \choiceimg{#4}&\centering \choiceimg{#6}&\centering \choiceimg{#8}\tabularnewline%
+    \centering A &\centering B &\centering C &\centering D%
     \end{tabular}}%
     {%
     \hspace*{-0.5em}\begin{tabular}{*{4} {@{} p{0.23\optwidth}}c}

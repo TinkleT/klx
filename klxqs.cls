@@ -408,9 +408,9 @@
 
 \cfoot{
     \ifthenelse%
-        {\thepage > \pageref{endofquestion}}%
-        {答案}%
+        {\thepage < \pageref{endofquestion}}%
         {第 \thepage 页，共 \pageref{endofquestion} 页}%
+        {答案}%
 }
 \newcommand{\klxanshead}[1]{
     \label{endofquestion}

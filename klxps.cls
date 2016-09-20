@@ -159,7 +159,7 @@
         \thenq_ChoiceBox_#1: (\the\dimexpr\zposx{\thenq_#1_ll}sp-\fboxsep, \the\dimexpr\zposy{\thenq_#1_ll}sp-\fboxsep)%
     }%
 }
-\newcommand{\AnswerBox}[1]{\fboxrule0.4pt\fbox{\begin{minipage}[t]{\textwidth}\begin{multicols}{2}\color{white}\fontsize{8}{8}\selectfont #1 \par \end{multicols}\end{minipage}}}
+\newcommand{\AnswerBox}[1]{\fboxrule0.4pt\fbox{\begin{minipage}[t]{\textwidth}\begin{multicols}{2}\color{white}\fontsize{10}{10}\selectfont #1 \par \end{multicols}\end{minipage}}}
 
 \newcommand{\fourch}[4]{% 四个选项一行
     \par%

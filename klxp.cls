@@ -11,12 +11,12 @@
 \RequirePackage{graphicx,ulem}
 \RequirePackage{mathrsfs}
 \RequirePackage[version=4]{mhchem}
-\RequirePackage{pifont, picinpar, picins, fancyhdr,lastpage}
+\RequirePackage{pifont, picinpar, fancyhdr,lastpage}
 \pagestyle{fancy}
 \RequirePackage{ifthen,CJKnumb,mdwlist,enumerate,wrapfig}
 \RequirePackage{newunicodechar}
 \graphicspath{{/Users/zhangyingjie/var/data/img/}}
-\setCJKmainfont{STSong}
+%\setCJKmainfont{STSong}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                                  %
@@ -210,7 +210,8 @@
          \begin{tabular}{*{5} {@{} p{0.19\optwidth}}} A. #1 & B. #3 & C. #5 & D. #7 & E. #9 \end{tabular}
         }
 }
-
+%\newcounter{endofquestion}
+%\setcounter{endofquestion}{99}
 \newcounter{ns}
 \newcounter{nq}
 \newcounter{nqq}[nq]
@@ -419,7 +420,7 @@
     \setlength{\contl}{\columnwidth-1em}
     \setcounter{ns}{0}
     \setcounter{nq}{0}
-    \CJKfontspec{STKaiti}% redefine in Windows or Linux, default for OS X
+ %   \CJKfontspec{STKaiti}% redefine in Windows or Linux, default for OS X
     \fontsize{8pt}{8pt}\selectfont
 }
 
